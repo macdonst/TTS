@@ -158,7 +158,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                     callbackContext.sendPluginResult(new PluginResult(status, result));
                 }
             }
-            callbackContext.sendPluginResult(new PluginResult(status, result));
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
