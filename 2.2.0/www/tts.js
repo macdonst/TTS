@@ -157,4 +157,5 @@ if(!window.plugins) {
 }
 if (!window.plugins.tts) {
     window.plugins.tts = cordova.require("cordova/plugin/tts");
+    window.TTS = window.plugins.tts;
 }
