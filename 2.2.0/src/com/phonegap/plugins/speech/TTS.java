@@ -20,7 +20,6 @@ import org.json.JSONObject;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
-import android.util.Log;
 
 import org.apache.cordova.api.CallbackContext;
 import org.apache.cordova.api.CordovaPlugin;
@@ -51,7 +50,7 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                 if (isReady()) {
                     HashMap<String, String> map = null;
                     map = new HashMap<String, String>();
-                    //map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackId);
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackContext.getCallbackId());
                     mTts.speak(text, TextToSpeech.QUEUE_ADD, map);
                     PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
                     pr.setKeepCallback(true);
@@ -158,7 +157,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                     callbackContext.sendPluginResult(new PluginResult(status, result));
                 }
             }
-            callbackContext.sendPluginResult(new PluginResult(status, result));
             return true;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -189,12 +187,37 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
             //this.success(result, this.startupCallbackId);
             this.startupCallbackContext.sendPluginResult(result);
             mTts.setOnUtteranceCompletedListener(this);
+//            Putting this code in hear as a place holder. When everything moves to API level 15 or greater
+//            we'll switch over to this way of trackign progress.
+//            mTts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+//
+//                @Override
+//                public void onDone(String utteranceId) {
+//                    Log.d(LOG_TAG, "got completed utterance");
+//                    PluginResult result = new PluginResult(PluginResult.Status.OK);
+//                    result.setKeepCallback(false);
+//                    callbackContext.sendPluginResult(result);        
+//                }
+//
+//                @Override
+//                public void onError(String utteranceId) {
+//                    Log.d(LOG_TAG, "got utterance error");
+//                    PluginResult result = new PluginResult(PluginResult.Status.ERROR);
+//                    result.setKeepCallback(false);
+//                    callbackContext.sendPluginResult(result);        
+//                }
+//
+//                @Override
+//                public void onStart(String utteranceId) {
+//                    Log.d(LOG_TAG, "started talking");
+//                }
+//                
+//            });
         }
         else if (status == TextToSpeech.ERROR) {
             state = TTS.STOPPED;
             PluginResult result = new PluginResult(PluginResult.Status.ERROR, TTS.STOPPED);
             result.setKeepCallback(false);
-            //this.error(result, this.startupCallbackId);
             this.startupCallbackContext.sendPluginResult(result);
         }
     }
@@ -214,7 +237,6 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
     public void onUtteranceCompleted(String utteranceId) {
         PluginResult result = new PluginResult(PluginResult.Status.OK);
         result.setKeepCallback(false);
-        //this.success(result, utteranceId);
         this.callbackContext.sendPluginResult(result);        
     }
 }
