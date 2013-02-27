@@ -148,6 +148,15 @@ cordova.define("cordova/plugin/tts",
     module.exports = tts;
 });
 
+cordova.define("cordova/plugin/ttsconstants",
+  function(require, exports, module) {
+    module.exports = {
+        STOPPED: 0,
+        INITIALIZING: 1,
+        STARTED: 2
+    };
+});
+
 /**
  * Load TTS
  */
@@ -157,4 +166,5 @@ if(!window.plugins) {
 }
 if (!window.plugins.tts) {
     window.plugins.tts = cordova.require("cordova/plugin/tts");
+    window.TTS = cordova.require("cordova/plugin/ttsconstants");
 }
