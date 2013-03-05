@@ -89,8 +89,13 @@ public class TTS extends CordovaPlugin implements OnInitListener, OnUtteranceCom
                 }
             } else if (action.equals("silence")) {
                 if (isReady()) {
-                    mTts.playSilence(args.getLong(0), TextToSpeech.QUEUE_ADD, null);
-                    callbackContext.sendPluginResult(new PluginResult(status, result));
+                    HashMap<String, String> map = null;
+                    map = new HashMap<String, String>();
+                    map.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, callbackContext.getCallbackId());
+                    mTts.playSilence(args.getLong(0), TextToSpeech.QUEUE_ADD, map);
+                    PluginResult pr = new PluginResult(PluginResult.Status.NO_RESULT);
+                    pr.setKeepCallback(true);
+                    callbackContext.sendPluginResult(pr);
                 } else {
                     JSONObject error = new JSONObject();
                     error.put("message","TTS service is still initialzing.");
